@@ -12,7 +12,7 @@ Window {
 
     Plugin {
         id: mapPlugin
-        name: "osm"
+        name: "mapboxgl" // "osm", "mapboxgl", "esri", ...
     }
 
     Map {

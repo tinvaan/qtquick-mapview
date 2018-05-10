@@ -6,8 +6,8 @@ import QtPositioning 5.6
 
 
 Window {
-    width: 512
-    height: 512
+    width: 1024
+    height: 768
     visible: true
 
     Plugin {
@@ -22,12 +22,20 @@ Window {
         center: QtPositioning.coordinate(59.91, 10.75) // Oslo
         zoomLevel: 14
 
+        // TODO: Use a MapQuickItem instead
         MapCircle {
-            center: QtPositioning.coordinate(59.91, 10.75) // Oslo
-            radius: 100.0
+            id: pointCircle
+            radius: 50.0
             color: 'black'
             opacity: 0.5
             border.width: 0.5
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                pointCircle.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
+            }
         }
     }
 }

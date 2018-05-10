@@ -10,31 +10,23 @@ Window {
     height: 768
     visible: true
 
-    Plugin {
-        id: mapPlugin
-        name: "mapboxgl" // "osm", "mapboxgl", "esri", ...
-    }
+    property MapCircle circle
 
     Map {
         id: map
         anchors.fill: parent
-        plugin: mapPlugin
+        plugin: Plugin {name: "mapboxgl" /*"osm", "mapboxgl", "esri", ... */}
         center: QtPositioning.coordinate(59.91, 10.75) // Oslo
         zoomLevel: 14
-
-        // TODO: Use a MapQuickItem instead
-        MapCircle {
-            id: pointCircle
-            radius: 50.0
-            color: 'black'
-            opacity: 0.5
-            border.width: 0.5
-        }
 
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                pointCircle.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
+                // TODO: Use a MapQuickItem instead
+                circle = Qt.createQmlObject('import QtLocation 5.3;\
+                                             MapCircle {radius: 50; color: "black"; opacity: 0.5; border.width: 0.5}', map)
+                circle.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
+                map.addMapItem(circle)
             }
         }
     }

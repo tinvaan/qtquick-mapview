@@ -19,13 +19,19 @@ Window {
         center: QtPositioning.coordinate(59.91, 10.75) // Oslo
         zoomLevel: 14
 
+        ListModel {
+            id: waypoints
+        }
+
         MouseArea {
             anchors.fill: parent
             onClicked: {
                 // TODO: Use a MapQuickItem instead
                 circle = Qt.createQmlObject('import QtLocation 5.3;\
                                              MapCircle {radius: 50; color: "black"; opacity: 0.5; border.width: 0.5}', map)
+
                 circle.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
+                waypoints.append(circle.center)
                 map.addMapItem(circle)
             }
         }

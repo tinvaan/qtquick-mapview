@@ -24,9 +24,10 @@ Window {
 
         MapCircle {
             center: QtPositioning.coordinate(59.91, 10.75) // Oslo
-            radius: 5000.0
+            radius: 100.0
             color: 'black'
+            opacity: 0.5
             border.width: 0.5
-      }
+        }
     }
 }

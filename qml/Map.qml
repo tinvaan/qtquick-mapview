@@ -6,24 +6,34 @@ import QtPositioning 5.6
 
 
 Window {
+    id: appWindow
     width: 1024
     height: 768
     visible: true
 
     property MapCircle uav
     property MapCircle point
+    property MapPolyline waypointLine
+
 
     Map {
         id: map
         anchors.fill: parent
-        plugin: Plugin {name: "mapboxgl" /*"osm", "mapboxgl", "esri", ... */}
-        center: QtPositioning.coordinate(59.91, 10.75) // Oslo
         zoomLevel: 14
+        center: QtPositioning.coordinate(59.91, 10.75) // Oslo
+        plugin: Plugin {
+            id: mapPlugin
+            name: "mapboxgl" /*"osm", "mapboxgl", "esri", ... */
+        }
 
+        RouteQuery {
+            id: pointsQuery
+        }
 
-        // TODO: Use a RouteQuery/RouteModel
-        ListModel {
-            id: waypoints
+        Flight {
+            id: uavFlight
+            pointsModel.plugin: mapPlugin
+            pointsModel.query: pointsQuery
         }
 
         MouseArea {
@@ -31,10 +41,14 @@ Window {
             onClicked: {
                 point = Qt.createQmlObject('import QtLocation 5.3;\
                                             MapCircle {radius: 35; color: "red"; opacity: 0.5; border.width: 0.5}', map)
+
                 point.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
-                waypoints.append(point.center)
+                pointsQuery.addWaypoint(point.center)
                 map.addMapItem(point)
+
+                uavFlight.waypointAdded(point.center)
             }
+            onDoubleClicked: uavFlight.flightRequested()
         }
 
         Component.onCompleted: {

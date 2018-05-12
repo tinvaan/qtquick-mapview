@@ -5,6 +5,7 @@ import QtLocation 5.6
 
 FocusScope {
     anchors.fill: parent
+    focus: true
 
     signal flightRequested
     signal waypointAdded(variant point)

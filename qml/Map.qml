@@ -37,29 +37,25 @@ Window {
         }
 
         MouseArea {
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
             anchors.fill: parent
-
             onClicked: {
-                if (mouse.button == Qt.LeftButton) {
-                    point = Qt.createQmlObject('import QtLocation 5.3;\
-                                                MapCircle {radius: 35; color: "red"; opacity: 0.5; border.width: 0.5}', map)
+                point = Qt.createQmlObject('import QtLocation 5.3;\
+                                            MapCircle {radius: 35; color: "red"; opacity: 0.5; border.width: 0.5}', map)
 
-                    point.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
-                    pointsQuery.addWaypoint(point.center)
-                    map.addMapItem(point)
+                point.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
+                pointsQuery.addWaypoint(point.center)
+                map.addMapItem(point)
 
-                    uavFlight.waypointAdded(point.center)
-                } else {
-                    if (!uav) {
-                        uav = Qt.createQmlObject('import QtLocation 5.3;\
-                                                  MapCircle {radius: 50; color: "black"; opacity: 0.8; border.width: 0.5}', map)
-                        uav.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
-                        map.addMapItem(uav)
-                    }
-                }
+                uavFlight.waypointAdded(point.center)
             }
+            onDoubleClicked: uavFlight.flightRequested()
+        }
+
+        Component.onCompleted: {
+            uav = Qt.createQmlObject('import QtLocation 5.3;\
+                                      MapCircle {radius: 50; color: "black"; opacity: 0.8; border.width: 0.5}', map)
+            uav.center = map.center
+            map.addMapItem(uav)
         }
     }
-
 }

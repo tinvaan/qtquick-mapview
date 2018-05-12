@@ -56,10 +56,12 @@ Window {
                     uavFlight.waypointAdded(point.center)
                 }
                 onDoubleClicked: {
-                    uav = Qt.createQmlObject('import QtLocation 5.3;\
-                                              MapCircle {radius: 50; color: "black"; opacity: 0.8; border.width: 0.5}', map)
-                    uav.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
-                    map.addMapItem(uav)
+                    if (!uav) {
+                        uav = Qt.createQmlObject('import QtLocation 5.3;\
+                                                  MapCircle {radius: 50; color: "black"; opacity: 0.8; border.width: 0.5}', map)
+                        uav.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
+                        map.addMapItem(uav)
+                    }
                 }
             }
         }

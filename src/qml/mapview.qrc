@@ -1,0 +1,6 @@
+<RCC>
+    <qresource>
+        <file alias="Map.qml">Map.qml</file>
+        <file alias="Flight.qml">Flight.qml</file>
+    </qresource>
+</RCC>

@@ -12,6 +12,7 @@ class LineInterpolator : public QObject
     Q_OBJECT
 
 public:
+    explicit LineInterpolator(QObject *parent=0);
     explicit LineInterpolator(QVector<QGeoCoordinate>, QObject *parent=0);
     explicit LineInterpolator(QVector<QPair<double, double>>, QObject *parent=0);
 

@@ -3,6 +3,10 @@
 #include "lineinterpolator.h"
 
 
+LineInterpolator::LineInterpolator(QObject *parent)
+    : QObject(parent)
+{}
+
 LineInterpolator::LineInterpolator(QVector<QGeoCoordinate> points, QObject *parent)
     : QObject(parent), m_endpoints(points)
 {}

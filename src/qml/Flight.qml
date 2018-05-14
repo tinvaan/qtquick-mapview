@@ -29,6 +29,7 @@ FocusScope {
         id: flightTimer
         interval: 100
         repeat: true
+        triggeredOnStart: true
         onTriggered: {
             if (waypointIndex < waypointLine.path.length) {
                 uav.center = waypointLine.path[waypointIndex]
@@ -50,6 +51,7 @@ FocusScope {
     onFlightRequested: {
         routeExtender.setLineCoordinates(waypointLine.path)
         waypointLine.path = routeExtender.getInterpolatedCoordinates()
+
         flightTimer.start()
     }
 }

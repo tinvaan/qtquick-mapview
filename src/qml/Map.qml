@@ -81,7 +81,13 @@ Window {
         }
         text: qsTr("Fly")
         opacity: 1
-        enabled: uavFlight.parked && (pointsQuery.waypoints.length > 1)
         onClicked: uavFlight.flightRequested()
+        enabled: {
+            if (uavFlight.flightTimer) {
+                return uavFlight.parked && (pointsQuery.waypoints.length > 1) && !uavFlight.flightTimer.running
+            } else {
+                return uavFlight.parked && (pointsQuery.waypoints.length > 1)
+            }
+        }
     }
 }

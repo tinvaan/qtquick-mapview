@@ -26,7 +26,7 @@ FocusScope {
 
     Timer {
         id: flightTimer
-        interval: 1000
+        interval: 100
         repeat: true
         onTriggered: {
             if (waypointIndex < waypointLine.path.length) {

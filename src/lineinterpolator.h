@@ -2,8 +2,9 @@
 #define LINEINTERPOLATOR_H
 
 #include <QPair>
-#include <QVector>
 #include <QObject>
+#include <QVector>
+#include <QVariant>
 #include <QGeoCoordinate>
 
 
@@ -13,18 +14,17 @@ class LineInterpolator : public QObject
 
 public:
     explicit LineInterpolator(QObject *parent=0);
-    explicit LineInterpolator(QVector<QGeoCoordinate>, QObject *parent=0);
-    explicit LineInterpolator(QVector<QPair<double, double>>, QObject *parent=0);
+    explicit LineInterpolator(QVariantList, QObject *parent=0);
 
     void interpolate();
     void populateSegments();
-    QVector<QGeoCoordinate> getLineCoordinates();
+    QVariantList getLineCoordinates();
 
-    Q_INVOKABLE void setLineCoordinates(QVector<QGeoCoordinate> );
-    Q_INVOKABLE QVector<QGeoCoordinate> getInterpolatedCoordinates();
+    Q_INVOKABLE void setLineCoordinates(QVariantList );
+    Q_INVOKABLE QVariantList getInterpolatedCoordinates();
 
 private:
-    QVector<QGeoCoordinate> m_endpoints, m_coordinates;
+    QVariantList m_endpoints, m_coordinates;
     QVector<QPair<QGeoCoordinate, QGeoCoordinate>> m_segments;
 };
 

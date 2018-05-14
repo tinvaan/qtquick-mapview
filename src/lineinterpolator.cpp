@@ -2,23 +2,16 @@
 
 #include "lineinterpolator.h"
 
+#define SCALE_INTERVAL 0.00001
+
 
 LineInterpolator::LineInterpolator(QObject *parent)
     : QObject(parent)
 {}
 
-LineInterpolator::LineInterpolator(QVector<QGeoCoordinate> points, QObject *parent)
+LineInterpolator::LineInterpolator(QVariantList points, QObject *parent)
     : QObject(parent), m_endpoints(points)
 {}
-
-LineInterpolator::LineInterpolator(QVector<QPair<double, double>> points, QObject *parent)
-    : QObject(parent)
-{
-    for (QPair<double, double> point : points) {
-        QGeoCoordinate coord(point.first, point.second);
-        m_endpoints.append(coord);
-    }
-}
 
 void LineInterpolator::interpolate()
 {
@@ -38,17 +31,17 @@ void LineInterpolator::interpolate()
         slope = (y2 - y1)/(x2 -x1);
         constant = y1 - (slope * x1);
 
-        qDebug() << "Interpolating between (" << x1 << ", " << y1 << ") and ("
+        qDebug() << "\nInterpolating between (" << x1 << ", " << y1 << ") and ("
                                               << x2 << ", " << y2 << ")";
         qDebug() << "slope = " << slope << "\t constant = " << constant;
-        m_coordinates.append(begin);
-        for (double x = x1 + 0.005; x < x2; x += 0.005) {
+
+        m_coordinates.append(QVariant::fromValue(begin));
+        for (double x = x1 + SCALE_INTERVAL; x < x2; x += SCALE_INTERVAL) {
             double y = (slope * x) + constant;
             qDebug() << "(" << x << ", " << y << ")";
-            m_coordinates.append(QGeoCoordinate(x, y));
+            m_coordinates.append(QVariant::fromValue(QGeoCoordinate(x, y)));
         }
-        m_coordinates.append(end);
-        qDebug() << "\n";
+        m_coordinates.append(QVariant::fromValue(end));
     }
 }
 
@@ -56,22 +49,24 @@ void LineInterpolator::populateSegments()
 {
     for(int index = 0; index < m_endpoints.size(); index++) {
         if (index + 1 < m_endpoints.size())
-            m_segments.append(QPair<QGeoCoordinate, QGeoCoordinate>(m_endpoints[index], m_endpoints[index + 1]));
+            m_segments.append(
+                QPair<QGeoCoordinate, QGeoCoordinate>(m_endpoints[index].value<QGeoCoordinate>(),
+                                                      m_endpoints[index + 1].value<QGeoCoordinate>()));
         else break;
     }
 }
 
-QVector<QGeoCoordinate> LineInterpolator::getLineCoordinates()
+QVariantList LineInterpolator::getLineCoordinates()
 {
     return m_endpoints;
 }
 
-void LineInterpolator::setLineCoordinates(QVector<QGeoCoordinate> points)
+void LineInterpolator::setLineCoordinates(QVariantList points)
 {
     m_endpoints = points;
 }
 
-QVector<QGeoCoordinate> LineInterpolator::getInterpolatedCoordinates()
+QVariantList LineInterpolator::getInterpolatedCoordinates()
 {
     if (m_coordinates.isEmpty() && !m_endpoints.isEmpty())
         interpolate();

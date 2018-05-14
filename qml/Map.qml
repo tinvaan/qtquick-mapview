@@ -63,6 +63,7 @@ Window {
                                                       MapCircle {radius: 50; color: "black"; opacity: 0.8; border.width: 0.5}', map)
                             uav.center = map.toCoordinate(Qt.point(mouse.x, mouse.y))
                             map.addMapItem(uav)
+                            uavFlight.parked = true
                         }
                     }
                 }
@@ -80,6 +81,7 @@ Window {
         }
         text: qsTr("Fly")
         opacity: 1
+        enabled: uavFlight.parked && (pointsQuery.waypoints.length > 1)
         onClicked: uavFlight.flightRequested()
     }
 }

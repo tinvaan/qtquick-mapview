@@ -10,6 +10,7 @@ FocusScope {
     signal flightRequested
     signal waypointAdded(variant point)
 
+    property bool parked: false
     property int waypointIndex: 0
     property alias pointsModel: uavRouteModel
 

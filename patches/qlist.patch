@@ -1,0 +1,95 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6f753b42f058bc72beddfe212b47fda1971723bc..179dc90cd2122bcb4bac025bc0c31e4a7f499a1b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,6 +8,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(QT_MIN_VERSION "5.5.0")
+ find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Quick Widgets Positioning)
+ 
+-option(BUILD_TESTS "Build a basic unit test to check the funtioning of the interpolation module" ON)
++option(BUILD_TESTS "Build a basic unit test to check the funtioning of the interpolation module" OFF)
+ 
+ add_subdirectory(src)
+diff --git a/src/lineinterpolator.cpp b/src/lineinterpolator.cpp
+index fdfb03e641b97b6b38ec1d92d4131d5b43cc2765..7e5e14353c64ae4e2a2d1016e00c50cfc70d2cd2 100644
+--- a/src/lineinterpolator.cpp
++++ b/src/lineinterpolator.cpp
+@@ -7,11 +7,11 @@ LineInterpolator::LineInterpolator(QObject *parent)
+     : QObject(parent)
+ {}
+ 
+-LineInterpolator::LineInterpolator(QVector<QGeoCoordinate> points, QObject *parent)
++LineInterpolator::LineInterpolator(QList<QGeoCoordinate> points, QObject *parent)
+     : QObject(parent), m_endpoints(points)
+ {}
+ 
+-LineInterpolator::LineInterpolator(QVector<QPair<double, double>> points, QObject *parent)
++LineInterpolator::LineInterpolator(QList<QPair<double, double>> points, QObject *parent)
+     : QObject(parent)
+ {
+     for (QPair<double, double> point : points) {
+@@ -61,17 +61,21 @@ void LineInterpolator::populateSegments()
+     }
+ }
+ 
+-QVector<QGeoCoordinate> LineInterpolator::getLineCoordinates()
++QList<QGeoCoordinate> LineInterpolator::getLineCoordinates()
+ {
+     return m_endpoints;
+ }
+ 
+-void LineInterpolator::setLineCoordinates(QVector<QGeoCoordinate> points)
++void LineInterpolator::setLineCoordinates(QList<QGeoCoordinate> points)
+ {
++    qDebug() << "Setting line coordinates : " << points.size();
++    for (auto point : points)
++        qDebug() << "(" << point.latitude() << ", " << point.longitude() << ")";
++
+     m_endpoints = points;
+ }
+ 
+-QVector<QGeoCoordinate> LineInterpolator::getInterpolatedCoordinates()
++QList<QGeoCoordinate> LineInterpolator::getInterpolatedCoordinates()
+ {
+     if (m_coordinates.isEmpty() && !m_endpoints.isEmpty())
+         interpolate();
+diff --git a/src/lineinterpolator.h b/src/lineinterpolator.h
+index ea63120e2d0498bc59657b660291933342f69566..920f6991f8be08a5f9bcae46f536805e1abf7ea9 100644
+--- a/src/lineinterpolator.h
++++ b/src/lineinterpolator.h
+@@ -2,7 +2,7 @@
+ #define LINEINTERPOLATOR_H
+ 
+ #include <QPair>
+-#include <QVector>
++#include <QList>
+ #include <QObject>
+ #include <QGeoCoordinate>
+ 
+@@ -13,19 +13,19 @@ class LineInterpolator : public QObject
+ 
+ public:
+     explicit LineInterpolator(QObject *parent=0);
+-    explicit LineInterpolator(QVector<QGeoCoordinate>, QObject *parent=0);
+-    explicit LineInterpolator(QVector<QPair<double, double>>, QObject *parent=0);
++    explicit LineInterpolator(QList<QGeoCoordinate>, QObject *parent=0);
++    explicit LineInterpolator(QList<QPair<double, double>>, QObject *parent=0);
+ 
+     void interpolate();
+     void populateSegments();
+-    QVector<QGeoCoordinate> getLineCoordinates();
++    QList<QGeoCoordinate> getLineCoordinates();
+ 
+-    Q_INVOKABLE void setLineCoordinates(QVector<QGeoCoordinate> );
+-    Q_INVOKABLE QVector<QGeoCoordinate> getInterpolatedCoordinates();
++    Q_INVOKABLE void setLineCoordinates(QList<QGeoCoordinate> );
++    Q_INVOKABLE QList<QGeoCoordinate> getInterpolatedCoordinates();
+ 
+ private:
+-    QVector<QGeoCoordinate> m_endpoints, m_coordinates;
+-    QVector<QPair<QGeoCoordinate, QGeoCoordinate>> m_segments;
++    QList<QGeoCoordinate> m_endpoints, m_coordinates;
++    QList<QPair<QGeoCoordinate, QGeoCoordinate>> m_segments;
+ };
+ 
+ #endif // LINEINTERPOLATOR_H

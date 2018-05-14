@@ -1,6 +1,7 @@
 import QtQuick 2.7
-
 import QtLocation 5.6
+
+import com.mapview.interpolator 1.0
 
 
 FocusScope {
@@ -17,6 +18,10 @@ FocusScope {
     RouteModel {
         id: uavRouteModel
         autoUpdate: true
+    }
+
+    Interpolator {
+        id: routeExtender
     }
 
     Timer {
@@ -41,5 +46,9 @@ FocusScope {
         map.addMapItem(waypointLine)
     }
 
-    onFlightRequested: flightTimer.start()
+    onFlightRequested: {
+        routeExtender.setLineCoordinates(waypointLine.path)
+        waypointLine.path = routeExtender.getInterpolatedCoordinates()
+        flightTimer.start()
+    }
 }

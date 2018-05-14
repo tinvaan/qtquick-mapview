@@ -22,6 +22,9 @@ LineInterpolator::LineInterpolator(QVector<QPair<double, double>> points, QObjec
 
 void LineInterpolator::interpolate()
 {
+    if (m_segments.isEmpty())
+        populateSegments();
+
     QGeoCoordinate begin, end;
     double x1, x2, y1, y2, slope, constant;
 
@@ -70,5 +73,8 @@ void LineInterpolator::setLineCoordinates(QVector<QGeoCoordinate> points)
 
 QVector<QGeoCoordinate> LineInterpolator::getInterpolatedCoordinates()
 {
+    if (m_coordinates.isEmpty() && !m_endpoints.isEmpty())
+        interpolate();
+
     return m_coordinates;
 }

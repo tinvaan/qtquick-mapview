@@ -26,3 +26,6 @@ Launch the `mapview` executable, inside the `build/src` directory.
 * Click anywhere on the map to plot waypoints.(indicated by red `MapCircle`s)
 * Double click anywhere on the map to park the UAV.(indicated by a black `MapCircle`)
 * Click on the `Fly` button at the bottom right corner of the window to launch the simulation.
+
+## Screenshot
+![UAV flight simulation around a part of Singapore](https://i.imgur.com/hzDYMAW.png "QtQuick Mapview Flight Simulator")
